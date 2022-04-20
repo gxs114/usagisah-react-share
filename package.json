@@ -1,0 +1,35 @@
+{
+  "name": "usagisah-react-share",
+  "version": "0.0.1",
+  "description": "个人开发 react 项目的常用工具函数",
+  "keywords": [],
+  "homepage": "https://github.com/gxs114/usagisah-react-share#readme",
+  "bugs": {
+    "url": "https://github.com/gxs114/usagisah-react-share/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gxs114/usagisah-react-share.git"
+  },
+  "license": "ISC",
+  "author": "@gxs114/usagisah",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json",
+    "build:esm": "tsc -p ./tsconfig.esm.json",
+    "format": "prettier --w ./lib/*.ts"
+  },
+  "dependencies": {
+    "@types/react": "^18.0.5",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.6.2",
+    "prettier-config-usagisah": "^1.0.1"
+  }
+}
