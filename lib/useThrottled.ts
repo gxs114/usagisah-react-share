@@ -13,7 +13,7 @@ import { useEffect, useLayoutEffect, useRef } from "react"
  * }, [input], 700)
  */
 export function useThrottled(fn: () => void, deeps: unknown[], delay = 700) {
-  const timer = useRef<number>()
+  const timer = useRef<any>()
   useEffect(() => {
     if (timer.current) {
       return
@@ -39,7 +39,7 @@ export function useLayoutThrottled(
   deeps: unknown[],
   delay = 700
 ) {
-  const timer = useRef<number>()
+  const timer = useRef<any>()
   useLayoutEffect(() => {
     if (timer.current) {
       return
