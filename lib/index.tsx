@@ -16,3 +16,5 @@ export * from "./useThrottled"
 export * from "./useToggle"
 // 跳过第一次执行的 useEffect
 export * from "./useUpdate"
+// 获取当前系统主题
+export * from "./useSystemTheme"
