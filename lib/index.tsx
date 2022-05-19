@@ -1,5 +1,5 @@
-// 异步 useEffect
-export * from "./useAsyncEffect"
+// 返回一个函数，它没有闭包陷阱，返回的引用值永远不变
+export * from "./useEvent"
 // 防抖
 export * from "./useDebounce"
 // vue 的 forceUpdate

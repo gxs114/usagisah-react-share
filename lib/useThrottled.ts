@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react"
 
 /**
- * @description 节流函数，内部使用 useEffect 监听，没有闭包陷阱
+ * @description 节流函数，一定时间内只会执行一次，内部使用 useEffect 监听，没有闭包陷阱
  * @param fn 要执行的函数
  * @param deeps 监听的值的依赖数组
  * @param delay 节流时间，默认是 700ms
@@ -18,7 +18,10 @@ export function useThrottled(fn: () => void, deeps: unknown[], delay = 700) {
     if (timer.current) {
       return
     }
-    timer.current = setTimeout(fn, delay)
+    timer.current = setTimeout(() => {
+      fn()
+      timer.current = null
+    }, delay)
   }, deeps)
 }
 

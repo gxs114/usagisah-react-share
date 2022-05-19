@@ -1,20 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useLayoutEffect,
-  useMemo,
-  useState
-} from "react"
-
-type SplitHelper<
-  T extends string,
-  S extends string = "",
-  A extends string[] = []
-> = T extends `${infer item}${S}${infer rest}`
-  ? SplitHelper<rest, S, [...A, item]>
-  : A
-
-type SplitType<T extends string, S extends string = ""> = SplitHelper<T, S>
+import { Dispatch, SetStateAction, useLayoutEffect, useState } from "react"
 
 /**
  * @description 参数支持4种类型：boolean, number, string, Array<any>
@@ -26,55 +10,61 @@ type SplitType<T extends string, S extends string = ""> = SplitHelper<T, S>
  * const [num, toggleNum, setNum] = useToggle(1)
  * const [str, toggleStr, setStr] = useToggle("123")  // 如果是字符串，会被拆解成数组，按照数组模式来切换
  */
-export function useToggle<T extends boolean>(
-  initialValue: T
-): ReturnType<typeof withBoolean>
-export function useToggle<T extends number>(
-  initialValue: T
-): ReturnType<typeof withNumber>
-export function useToggle<T extends string>(
-  initialValue: T
-): [SplitType<T>, () => void, Dispatch<SetStateAction<string[]>>]
+export function useToggle(initialValue: boolean): ReturnType<typeof withBoolean>
+export function useToggle(initialValue: number): ReturnType<typeof withNumber>
+export function useToggle(
+  initialValue: string
+): [string, () => void, Dispatch<SetStateAction<string[]>>]
 export function useToggle<T>(
   initialValue: T[]
-): [T, () => void, Dispatch<SetStateAction<T[]>>]
+): [T, () => void, Dispatch<SetStateAction<any[]>>]
 export function useToggle(initialValue: any) {
-  const [value, setValue] = useState(initialValue)
-  switch (typeof value) {
+  switch (typeof initialValue) {
     case "boolean":
-      return withBoolean(value, setValue)
+      return withBoolean(initialValue)
     case "number":
-      return withNumber(value, setValue)
+      return withNumber(initialValue)
     case "object":
-      if (Array.isArray(value)) {
-        return withArray(value, setValue)
+      if (Array.isArray(initialValue)) {
+        return withArray(initialValue)
       }
     case "string":
-      const memoValue = useMemo(() => value.split(""), [value])
-      return withArray(memoValue, setValue)
+      return withArray(initialValue)
     default:
       throw Error("useToggle: value must be boolean or array or number")
   }
 }
 
-function withBoolean(value: boolean, set: Dispatch<SetStateAction<boolean>>) {
+function withBoolean(value: boolean) {
   const [bool, setBool] = useState(value)
   const toggle = () => setBool(!bool)
-  return [bool, toggle, set] as const
+  useLayoutEffect(() => {
+    setBool(value)
+  }, [value])
+  return [bool, toggle, setBool] as const
 }
 
-function withNumber(value: number, set: Dispatch<SetStateAction<number>>) {
+function withNumber(value: number) {
   const [n, setN] = useState(value)
   const toggle = () => setN(n + 1)
-  return [n, toggle, set] as const
+  useLayoutEffect(() => {
+    setN(value)
+  }, [value])
+  return [n, toggle, setN] as const
 }
 
-function withArray<T>(ary: T[], set: Dispatch<SetStateAction<T[]>>) {
+function withArray<T>(value: T[]) {
+  const [ary, setAry] = useState(value)
   const [index, setIndex] = useState(0)
-  const toggle = () =>
-    ary.length === 0 ? null : ary[index + 1] ? setIndex(index + 1) : setIndex(0)
+  const toggle = () => {
+    return ary.length === 0
+      ? null
+      : ary[index + 1]
+      ? setIndex(index + 1)
+      : setIndex(0)
+  }
   useLayoutEffect(() => {
-    setIndex(0)
-  }, [ary])
-  return [ary[index], toggle, set] as const
+    setAry(value)
+  }, [value])
+  return [ary[index], toggle, setAry] as const
 }
